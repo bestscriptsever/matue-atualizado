@@ -200,7 +200,13 @@ local State = {
         AutoSpeedSwitch = false,
         
         -- MOBILE HUD TOGGLES
-        MobileHUD = isMobile, LockHUD = false, HUD_TPDown = false, HUD_Drop = false, HUD_Reset = false, HUD_Steal = false
+        MobileHUD = isMobile, LockHUD = false, 
+        HUD_TPDown = false, HUD_Drop = false, HUD_Reset = false, HUD_SpeedMode = false,
+        HUD_Steal = false, HUD_AutoBat = false, HUD_BatCounter = false, HUD_MedusaCounter = false, 
+        HUD_ResetMedusa = false, HUD_Macro = false, HUD_SpeedSystem = false, HUD_AutoSpeedSwitch = false,
+        HUD_AutoLeft = false, HUD_AutoRight = false, HUD_InfJump = false, HUD_AntiRagdoll = false, 
+        HUD_Unwalk = false, HUD_NoCollision = false, HUD_RemoveAccs = false, HUD_AntiLag = false, 
+        HUD_AutoTPDown = false, HUD_AntiKick = false
     },
     Binds = {
         AutoBat = Enum.KeyCode.X, Macro = Enum.KeyCode.B, 
@@ -876,11 +882,46 @@ local function CreateHudButton(id, text, actionType, actionKey)
     return btn
 end
 
--- Criando os Botões da HUD
+-- ============================================================
+-- [ LÓGICA ESPECIAL PARA O BOTÃO HUD DO SPEED MODE ]
+-- ============================================================
+LogicActions.SpeedModeHUD = function()
+    if State.Values.SpeedMode == "Normal" then
+        State.Values.SpeedMode = "Lagger"
+    else
+        State.Values.SpeedMode = "Normal"
+    end
+    if InputUpdaters.SpeedMode then InputUpdaters.SpeedMode(State.Values.SpeedMode) end
+    SaveSystem()
+    if hudButtons["HUD_SpeedMode"] then
+        hudButtons["HUD_SpeedMode"].btn.Text = "MODE:\n" .. string.upper(State.Values.SpeedMode)
+    end
+end
+
+-- Criando TODOS os Botões da HUD
 CreateHudButton("HUD_TPDown", "TP\nDOWN", "Button", "TPDown")
 CreateHudButton("HUD_Drop", "DROP", "Button", "Drop")
 CreateHudButton("HUD_Reset", "RESET", "Button", "InstaReset")
+CreateHudButton("HUD_SpeedMode", "MODE:\nNORMAL", "Button", "SpeedModeHUD")
+
 CreateHudButton("HUD_Steal", "AUTO\nSTEAL", "Toggle", "AutoSteal")
+CreateHudButton("HUD_AutoBat", "AUTO\nBAT", "Toggle", "AutoBat")
+CreateHudButton("HUD_BatCounter", "BAT\nCOUNT", "Toggle", "BatCounter")
+CreateHudButton("HUD_MedusaCounter", "MEDUSA\nCOUNT", "Toggle", "MedusaCounter")
+CreateHudButton("HUD_ResetMedusa", "RESET\nMEDUSA", "Toggle", "ResetMedusa")
+CreateHudButton("HUD_Macro", "MACRO", "Toggle", "Macro")
+CreateHudButton("HUD_SpeedSystem", "SPEED\nSYS", "Toggle", "SpeedSystem")
+CreateHudButton("HUD_AutoSpeedSwitch", "AUTO\nSPD", "Toggle", "AutoSpeedSwitch")
+CreateHudButton("HUD_AutoLeft", "AUTO\nLEFT", "Toggle", "AutoLeft")
+CreateHudButton("HUD_AutoRight", "AUTO\nRIGHT", "Toggle", "AutoRight")
+CreateHudButton("HUD_InfJump", "INF\nJUMP", "Toggle", "InfJump")
+CreateHudButton("HUD_AntiRagdoll", "ANTI\nRAG", "Toggle", "AntiRagdoll")
+CreateHudButton("HUD_Unwalk", "UNWALK", "Toggle", "Unwalk")
+CreateHudButton("HUD_NoCollision", "NO\nCOLL", "Toggle", "NoCollision")
+CreateHudButton("HUD_RemoveAccs", "REM\nACCS", "Toggle", "RemoveAccs")
+CreateHudButton("HUD_AntiLag", "ANTI\nLAG", "Toggle", "AntiLag")
+CreateHudButton("HUD_AutoTPDown", "AUTO\nTP DWN", "Toggle", "AutoTPDown")
+CreateHudButton("HUD_AntiKick", "ANTI\nKICK", "Toggle", "AntiKick")
 
 local function UpdateHUDVisibility()
     local isHudOn = State.Toggles.MobileHUD
@@ -890,14 +931,16 @@ local function UpdateHUDVisibility()
             data.strk.Color = State.Toggles[data.key] and Theme.Primary or Theme.Border
             data.btn.TextColor3 = State.Toggles[data.key] and Theme.Primary or Theme.Text
         end
+        if data.key == "SpeedModeHUD" then
+            data.btn.Text = "MODE:\n" .. string.upper(State.Values.SpeedMode)
+        end
     end
 end
 
 LogicActions.MobileHUD = UpdateHUDVisibility
-LogicActions.HUD_TPDown = UpdateHUDVisibility
-LogicActions.HUD_Drop = UpdateHUDVisibility
-LogicActions.HUD_Reset = UpdateHUDVisibility
-LogicActions.HUD_Steal = UpdateHUDVisibility
+for id, _ in pairs(hudButtons) do
+    LogicActions[id] = UpdateHUDVisibility
+end
 
 LogicActions.HUDScale = function()
     local scale = State.Values.HUDScale / 100
@@ -1377,11 +1420,32 @@ CreateToggle(tabMobile, "Ativar HUD Mobile", nil, "MobileHUD")
 CreateToggle(tabMobile, "Travar Botões (Lock)", nil, "LockHUD")
 CreateSlider(tabMobile, "Tamanho dos Botões (%)", "HUDScale", 30, 150, 5)
 
-CreateSection(tabMobile, "BOTÕES NA TELA")
+CreateSection(tabMobile, "BOTÕES NA TELA (AÇÕES)")
 CreateToggle(tabMobile, "Botão: TP Down", nil, "HUD_TPDown")
 CreateToggle(tabMobile, "Botão: Execute Drop", nil, "HUD_Drop")
 CreateToggle(tabMobile, "Botão: Insta Reset", nil, "HUD_Reset")
+CreateToggle(tabMobile, "Botão: Speed Mode", nil, "HUD_SpeedMode")
+
+CreateSection(tabMobile, "BOTÕES NA TELA (TOGGLES)")
 CreateToggle(tabMobile, "Botão: Auto Steal", nil, "HUD_Steal")
+CreateToggle(tabMobile, "Botão: Auto Bat", nil, "HUD_AutoBat")
+CreateToggle(tabMobile, "Botão: Bat Counter", nil, "HUD_BatCounter")
+CreateToggle(tabMobile, "Botão: Medusa Counter", nil, "HUD_MedusaCounter")
+CreateToggle(tabMobile, "Botão: Reset Medusa", nil, "HUD_ResetMedusa")
+CreateToggle(tabMobile, "Botão: Macro", nil, "HUD_Macro")
+CreateToggle(tabMobile, "Botão: Speed System", nil, "HUD_SpeedSystem")
+CreateToggle(tabMobile, "Botão: Auto Speed Switch", nil, "HUD_AutoSpeedSwitch")
+CreateToggle(tabMobile, "Botão: Auto Left", nil, "HUD_AutoLeft")
+CreateToggle(tabMobile, "Botão: Auto Right", nil, "HUD_AutoRight")
+CreateToggle(tabMobile, "Botão: Inf Jump", nil, "HUD_InfJump")
+CreateToggle(tabMobile, "Botão: Anti Ragdoll", nil, "HUD_AntiRagdoll")
+CreateToggle(tabMobile, "Botão: Unwalk", nil, "HUD_Unwalk")
+CreateToggle(tabMobile, "Botão: No Collision", nil, "HUD_NoCollision")
+CreateToggle(tabMobile, "Botão: Remove Accs", nil, "HUD_RemoveAccs")
+CreateToggle(tabMobile, "Botão: Anti Lag", nil, "HUD_AntiLag")
+CreateToggle(tabMobile, "Botão: Auto TP Down", nil, "HUD_AutoTPDown")
+CreateToggle(tabMobile, "Botão: Anti Kick", nil, "HUD_AntiKick")
+
 
 -- COMBAT TAB
 CreateSection(tabCombat, "AUTO COMBAT")
