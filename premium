@@ -10,12 +10,12 @@ local StarterGui = game:GetService("StarterGui")
 
 local player = Players.LocalPlayer
 
--- ============================================================
--- [ IDS PERMITIDOS ]
--- ============================================================
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
 local IDs_Permitidos = {
-    [2049361108] = true,
     [1644360466] = true,
+    [2049361108] = true,
     [5100360957] = true,
     [10519600803] = true,
     [5491260413] = true,
@@ -23,8 +23,6 @@ local IDs_Permitidos = {
     [4392089033] = true,
     [9285955744] = true
 }
-
-local player = game:GetService("Players").LocalPlayer
 
 if not IDs_Permitidos[player.UserId] then
     player:Kick("Você não tem permissão para usar.")
