@@ -11,13 +11,12 @@ local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 
 -- ============================================================
--- [ ANTI-KICK & PROTEÇÕES ]
+-- [ IDS PERMITIDOS ]
 -- ============================================================
 local IDs_Permitidos = {
     [2049361108] = true,
     [1644360466] = true,
     [5100360957] = true,
-    [1644360466] = true,
     [10519600803] = true,
     [5491260413] = true,
     [9476297444] = true,
@@ -25,25 +24,12 @@ local IDs_Permitidos = {
     [9285955744] = true
 }
 
+local player = game:GetService("Players").LocalPlayer
+
 if not IDs_Permitidos[player.UserId] then
     player:Kick("Você não tem permissão para usar.")
-    return 
+    return
 end
-
-if not game:IsLoaded() then game.Loaded:Wait() end
-
-pcall(function()
-    local hm = hookmetamethod or hook_metamethod
-    local nc = getnamecallmethod or get_namecall_method
-    if hm and nc then
-        local oldNamecall
-        oldNamecall = hm(game, "__namecall", function(self, ...)
-            local method = nc()
-            if self == player and (method == "Kick" or method == "kick") then return end
-            return oldNamecall(self, ...)
-        end)
-    end
-end)
 
 local cursedResetRemote = nil
 local CURSED_RESET_GUID = "f888ee6e-c86d-46e1-93d7-0639d6635d42"
