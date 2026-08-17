@@ -817,7 +817,6 @@ local function CreateHudButton(id, text, actionType, actionKey)
     btn.TextSize = 12
     btn.Text = text
     btn.Visible = false
-    btn.Active = true
     Instance.new("UICorner", btn).CornerRadius = UDim.new(1, 0)
     
     local strk = Instance.new("UIStroke", btn)
@@ -2976,7 +2975,6 @@ LogicActions.AntiKick = function()
     end
 end
 
-local holdJumpPressed = false
 local holdJumpActive = false
 local manualJumpCooldown = false
 local lastJumpTime = 0
@@ -3019,6 +3017,7 @@ end
 
 UserInputService.JumpRequest:Connect(function() 
     if _G.Aimlock_Script_Versao == minhaVersao then 
+        holdJumpActive = true
         performInfiniteJump() 
         local now = tick()
         if now - MyAddonsState.lastJumpReq > 0.15 then
@@ -3030,6 +3029,10 @@ end)
 
 RunService.Heartbeat:Connect(function()
     if _G.Aimlock_Script_Versao ~= minhaVersao or not State.Toggles.InfJump then return end
+
+    if tick() - MyAddonsState.lastJumpReq > 0.15 then
+        holdJumpActive = false
+    end
 
     if (State.Values.JumpMode == "Hold" or State.Values.JumpMode == "Auto TP") and holdJumpActive then
         if tick() - lastJumpTime >= JUMP_COOLDOWN then applyInfJumpBoost(55) lastJumpTime = tick() end
@@ -3559,7 +3562,7 @@ player.CharacterAdded:Connect(function(char)
         if State.Toggles.AntiKick then pcall(LogicActions.AntiKick) end
         if State.Toggles.PredictESP then pcall(LogicActions.PredictESP) end
         
-        holdJumpActive = false holdJumpPressed = false manualJumpCooldown = false lastAutoTpDownTime = tick() lastState = nil
+        manualJumpCooldown = false lastAutoTpDownTime = tick() lastState = nil
         if hum then
             hum.StateChanged:Connect(function(_, newState)
                 local isRagdolled = (newState == Enum.HumanoidStateType.Physics or newState == Enum.HumanoidStateType.Ragdoll or newState == Enum.HumanoidStateType.FallingDown)
@@ -3581,17 +3584,6 @@ end
 
 UserInputService.InputBegan:Connect(function(input, gpe)
     if gpe or UserInputService:GetFocusedTextBox() then return end 
-
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then 
-        holdJumpPressed = true
-        holdJumpActive = true 
-    end
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Gamepad1 then
-        if input.KeyCode == Enum.KeyCode.ButtonA then
-            holdJumpPressed = true
-            holdJumpActive = true
-        end
-    end
 
     if listeningAction then
         if input.UserInputType == Enum.UserInputType.Keyboard or string.find(input.UserInputType.Name, "Gamepad") then
@@ -3633,20 +3625,6 @@ UserInputService.InputBegan:Connect(function(input, gpe)
                 if LogicActions[keyName] then LogicActions[keyName]() end
                 SaveSystem()
             end
-        end
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if _G.Aimlock_Script_Versao ~= minhaVersao then return end
-    if input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode == Enum.KeyCode.Space then 
-        holdJumpPressed = false 
-        holdJumpActive = false 
-    end
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.Gamepad1 then
-        if input.KeyCode == Enum.KeyCode.ButtonA or input.UserInputType == Enum.UserInputType.Touch then
-            holdJumpPressed = false
-            holdJumpActive = false
         end
     end
 end)
