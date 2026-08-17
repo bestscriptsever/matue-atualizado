@@ -72,19 +72,21 @@ end
 -- [ ANTI-KICK & PROTEÇÕES ]
 -- ============================================================
 local IDs_Permitidos = {
-    [2049361108] = true, -- ADMIN EXCLUSIVO
-    [10519600803] = true, -- Daviferreira
-    [9131051689] = true, -- guilherme067k
-    [6178386075] = true, -- Hakin
-    [5491260413] = true, -- GUILHERME_0644
-    [9476297444] = true, -- GUILHERME123456G55
-    [4392089033] = true, -- Marivaldo
-    [8970860435] = true, -- Xdragon alt
-    [10789766716] = true, -- king sabezz
-    [1644360466] = true, -- Novo usuario
-    [5088967382] = true  -- Novo usuario
+    [2049361108] = true,
+    [6178386075] = true,
+    [5100360957] = true,
+    [10519600803] = true,
+    [5491260413] = true,
+    [9476297444] = true,
+    [4392089033] = true,
+    [9285955744] = true,
+    [1644360466] = true -- < SEU ID ADICIONADO AQUI
 }
 
+if not IDs_Permitidos[player.UserId] then
+    player:Kick("Você não tem permissão para usar.")
+    return 
+end
 if not IDs_Permitidos[player.UserId] then
     player:Kick("Você não tem permissão para usar.")
     return 
