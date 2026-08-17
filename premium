@@ -1054,7 +1054,6 @@ local function CreateToggle(parentTab, titleText, keyName, stateKey)
     overlay.BackgroundTransparency = 1
     overlay.Text = ""
     overlay.ZIndex = 50
-    overlay.Active = false
 
     local function VisualUpdate(isActive)
         if isActive then
@@ -1100,7 +1099,6 @@ local function CreateToggle(parentTab, titleText, keyName, stateKey)
         bindBtn.Text = formatKeyName(State.Binds[keyName])
         bindBtn.ZIndex = 55
         bindBtn.AutoButtonColor = false
-        bindBtn.Active = false
         Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0, 4)
         Instance.new("UIStroke", bindBtn).Color = Theme.Border
         
@@ -1142,7 +1140,6 @@ local function CreateButton(parentTab, titleText, keyName, callbackFunc)
     overlay.BackgroundTransparency = 1
     overlay.Text = ""
     overlay.ZIndex = 50
-    overlay.Active = false
 
     overlay.Activated:Connect(function()
         if callbackFunc then callbackFunc() end
@@ -1167,7 +1164,6 @@ local function CreateButton(parentTab, titleText, keyName, callbackFunc)
         bindBtn.Text = formatKeyName(State.Binds[keyName])
         bindBtn.ZIndex = 55
         bindBtn.AutoButtonColor = false
-        bindBtn.Active = false
         Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0, 4)
         Instance.new("UIStroke", bindBtn).Color = Theme.Border
         table.insert(allKeybindButtonsList, {btn = bindBtn, name = keyName})
@@ -1260,7 +1256,6 @@ local function CreateCycleButton(parentTab, titleText, valueKey, options, keyNam
     btn.TextColor3 = Theme.Primary
     btn.Text = State.Values[valueKey] or options[1]
     btn.ZIndex = 3
-    btn.Active = false
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
     local btnStroke = Instance.new("UIStroke", btn)
     btnStroke.Color = Theme.Border
@@ -1297,7 +1292,6 @@ local function CreateCycleButton(parentTab, titleText, valueKey, options, keyNam
         bindBtn.Text = formatKeyName(State.Binds[keyName])
         bindBtn.ZIndex = 51
         bindBtn.AutoButtonColor = false
-        bindBtn.Active = false
         Instance.new("UICorner", bindBtn).CornerRadius = UDim.new(0, 4)
         Instance.new("UIStroke", bindBtn).Color = Theme.Border
 
@@ -1352,7 +1346,6 @@ local function CreateSlider(parentTab, titleText, valueKey, minVal, maxVal, step
     sliderBg.Text = ""
     sliderBg.ZIndex = 3
     sliderBg.AutoButtonColor = false
-    sliderBg.Active = false
     Instance.new("UICorner", sliderBg).CornerRadius = UDim.new(1, 0)
 
     local sliderFill = Instance.new("Frame", sliderBg)
@@ -1615,7 +1608,6 @@ local function atualizarLista()
         item.TextColor3 = Theme.TextMuted
         item.Text = "  " .. cfg
         item.TextXAlignment = Enum.TextXAlignment.Left
-        item.Active = false
         Instance.new("UICorner", item).CornerRadius = UDim.new(0, 4)
         
         item.Activated:Connect(function()
@@ -1817,7 +1809,6 @@ if IS_ADMIN and tabAdmin then
             btn.TextColor3 = Theme.TextMuted
             btn.Text = "   [" .. u.userid .. "] " .. u.username
             btn.TextXAlignment = Enum.TextXAlignment.Left
-            btn.Active = false
             Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
             
             if selectedHubUser and selectedHubUser.userid == u.userid then
