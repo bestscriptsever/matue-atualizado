@@ -66,7 +66,7 @@ local IDs_Permitidos = {
     [10519600803] = true,
     [5491260413] = true,
     [9476297444] = true,
-    [4392089033] = true
+    [1644360466] = true
 }
 
 if not IDs_Permitidos[player.UserId] then
